@@ -187,3 +187,73 @@ def create_dashboard_charts(
         )
 
     return charts
+
+
+def create_benchmark_analytics_charts(results: pd.DataFrame) -> dict:
+    charts = {}
+
+    if results.empty:
+        return charts
+
+    metric_columns = [
+        column
+        for column in ["hit_rate", "retrieval_accuracy", "recall_at_k", "precision_at_k", "mrr", "retrieval_latency"]
+        if column in results.columns
+    ]
+    if "top_k" in results.columns and metric_columns:
+        grouped = results.groupby("top_k")[metric_columns].mean().reset_index()
+        fig = go.Figure()
+        for metric in metric_columns:
+            fig.add_trace(go.Scatter(
+                x=grouped["top_k"],
+                y=grouped[metric],
+                mode="lines+markers",
+                name=metric,
+            ))
+        fig.update_layout(
+            title="Benchmark Metrics by Top-K",
+            xaxis_title="Top-K",
+            yaxis_title="Score",
+        )
+        charts["top_k_metrics"] = fig
+
+    if "chunk_overlap" in results.columns and "retrieval_latency" in results.columns:
+        grouped = results.groupby("chunk_overlap")["retrieval_latency"].mean().reset_index()
+        charts["chunk_overlap_latency"] = px.line(
+            grouped,
+            x="chunk_overlap",
+            y="retrieval_latency",
+            markers=True,
+            title="Retrieval Latency by Chunk Overlap",
+        )
+
+    if "model" in results.columns and "mean_latency" in results.columns:
+        charts["model_latency"] = px.bar(
+            results,
+            x="model",
+            y="mean_latency",
+            title="Embedding Latency by Model",
+        )
+
+    if "faithfulness" in results.columns:
+        frame = results.copy()
+        if "user_input" not in frame.columns:
+            frame = frame.reset_index().rename(columns={"index": "sample"})
+            x_col = "sample"
+        else:
+            x_col = "user_input"
+        charts["faithfulness"] = px.bar(
+            frame,
+            x=x_col,
+            y="faithfulness",
+            title="Faithfulness by Sample",
+        )
+
+    if "score" in results.columns:
+        charts["score_distribution"] = px.histogram(
+            results,
+            x="score",
+            title="Score Distribution",
+        )
+
+    return charts

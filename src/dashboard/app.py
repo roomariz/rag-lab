@@ -15,7 +15,12 @@ from src.benchmarks import (
     compare_embedding_models,
     RetrievalExperiment,
     RetrievalBenchmarkDataset,
+    BenchmarkArtifact,
+    list_benchmark_artifacts,
+    load_benchmark_artifact,
+    save_benchmark_artifact,
 )
+from src.visualization import create_benchmark_analytics_charts
 
 st.set_page_config(
     page_title="RAG Benchmark Lab",
@@ -39,12 +44,54 @@ def _save_uploaded_files(uploaded_files, target_dir: Path) -> list[Path]:
     return saved
 
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+def _serialize_summary(summary: dict) -> dict:
+    serialized = {}
+    for key, value in summary.items():
+        if isinstance(value, (int, float, str, bool)) or value is None:
+            serialized[key] = value
+        else:
+            serialized[key] = str(value)
+    return serialized
+
+
+def _save_dashboard_artifact(
+    *,
+    artifact_type: str,
+    experiment_name: str,
+    results: pd.DataFrame,
+    summary: dict,
+    config_payload: dict,
+    metadata: dict | None = None,
+) -> Path:
+    artifact = BenchmarkArtifact(
+        artifact_type=artifact_type,
+        experiment_name=experiment_name,
+        timestamp=datetime.now().isoformat(timespec="seconds"),
+        config=config_payload,
+        summary=_serialize_summary(summary),
+        results=results,
+        metadata=metadata or {},
+    )
+    return save_benchmark_artifact(artifact)
+
+
+def _artifact_label(path: Path) -> str:
+    try:
+        artifact = load_benchmark_artifact(path)
+    except Exception:
+        return path.name
+
+    created = artifact.timestamp[:19] if artifact.timestamp else "unknown time"
+    return f"{artifact.experiment_name} · {artifact.artifact_type} · {created}"
+
+
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "Retrieval Test",
     "Evaluation",
     "Embedding Comparison",
     "Experiments",
     "Ingestion",
+    "Saved Analytics",
 ])
 
 with tab1:
@@ -133,6 +180,19 @@ with tab2:
             st.subheader("Per-Sample Results")
             st.dataframe(result.per_sample_results)
 
+            artifact_path = _save_dashboard_artifact(
+                artifact_type="ragas_evaluation",
+                experiment_name=result.experiment_name,
+                results=result.per_sample_results,
+                summary=result.metrics,
+                config_payload={
+                    "llm_model": evaluator.llm_model,
+                    "embed_model": evaluator.embed_model,
+                },
+                metadata={"latencies": result.latencies, "timestamp": result.timestamp},
+            )
+            st.caption(f"Saved benchmark artifact: {artifact_path}")
+
 with tab3:
     st.header("Embedding Model Comparison")
 
@@ -167,6 +227,23 @@ with tab3:
 
             st.subheader("Latency Comparison")
             st.line_chart(results.set_index("model")["mean_latency"])
+
+            artifact_path = _save_dashboard_artifact(
+                artifact_type="embedding_comparison",
+                experiment_name="embedding_comparison",
+                results=results,
+                summary={
+                    "num_models": len(models),
+                    "num_texts": len(test_texts),
+                    "mean_latency": float(results["mean_latency"].mean()) if not results.empty else 0.0,
+                },
+                config_payload={
+                    "models": models,
+                    "num_runs": num_runs,
+                    "text_count": len(test_texts),
+                },
+            )
+            st.caption(f"Saved benchmark artifact: {artifact_path}")
 
 with tab4:
     st.header("Retrieval Experiments")
@@ -207,6 +284,22 @@ with tab4:
             st.subheader("Latency by K")
             latency_by_k = results.groupby("top_k")["retrieval_latency"].mean()
             st.line_chart(latency_by_k)
+
+            artifact_path = _save_dashboard_artifact(
+                artifact_type="top_k_tuning",
+                experiment_name="top_k_tuning",
+                results=results,
+                summary={
+                    "num_queries": len(queries),
+                    "num_k_values": len(k_values),
+                    "mean_retrieval_latency": float(results["retrieval_latency"].mean()) if not results.empty else 0.0,
+                },
+                config_payload={
+                    "collection_name": exp.collection_name,
+                    "k_values": k_values,
+                },
+            )
+            st.caption(f"Saved benchmark artifact: {artifact_path}")
 
     elif experiment_type == "Chunk Overlap Tuning":
         st.subheader("Chunk Overlap Tuning Experiment")

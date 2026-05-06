@@ -11,6 +11,7 @@ from ..retrieval import RetrievalPipeline, VectorStore
 from ..ingestion import DocumentChunker
 from .datasets import RetrievalBenchmarkDataset
 from .retrieval_metrics import evaluate_retrieval_benchmark
+from .artifacts import BenchmarkArtifact, save_benchmark_artifact
 
 
 @dataclass
@@ -147,18 +148,13 @@ def save_experiment(
     result: ExperimentResult,
     filename: Optional[str] = None,
 ) -> Path:
-    if filename is None:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{result.experiment_name}_{timestamp}.json"
-
-    output_path = RESULTS_DIR / filename
-
-    data = {
-        "experiment_name": result.experiment_name,
-        "config": result.config,
-        "summary": result.summary,
-        "results_csv": result.results.to_csv(index=False),
-    }
-
-    output_path.write_text(json.dumps(data, indent=2))
-    return output_path
+    artifact = BenchmarkArtifact(
+        artifact_type="retrieval_experiment",
+        experiment_name=result.experiment_name,
+        timestamp=datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        config=result.config,
+        summary=result.summary,
+        results=result.results,
+        metadata={},
+    )
+    return save_benchmark_artifact(artifact, filename=filename)

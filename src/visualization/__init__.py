@@ -5,6 +5,7 @@ from .plots import (
     plot_latency_breakdown,
     plot_similarity_matrix,
     create_dashboard_charts,
+    create_benchmark_analytics_charts,
 )
 
 __all__ = [
@@ -14,4 +15,5 @@ __all__ = [
     "plot_latency_breakdown",
     "plot_similarity_matrix",
     "create_dashboard_charts",
+    "create_benchmark_analytics_charts",
 ]

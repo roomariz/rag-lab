@@ -6,6 +6,7 @@ from .retrieval_metrics import (
     summarize_retrieval_metrics,
 )
 from .experiments import RetrievalExperiment, ExperimentResult, save_experiment
+from .artifacts import BenchmarkArtifact, load_benchmark_artifact, list_benchmark_artifacts, save_benchmark_artifact
 
 try:
     from .evaluator import RAGEvaluator, BenchmarkResult, compare_embedding_models, EmbeddingBenchmark
@@ -30,4 +31,8 @@ __all__ = [
     "RetrievalExperiment",
     "ExperimentResult",
     "save_experiment",
+    "BenchmarkArtifact",
+    "save_benchmark_artifact",
+    "load_benchmark_artifact",
+    "list_benchmark_artifacts",
 ]
