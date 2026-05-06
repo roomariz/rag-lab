@@ -1,0 +1,11 @@
+[project]
+name = "ragas"
+version = "0.1.0"
+description = "RAGAs Evaluation Lab using Ollama"
+requires-python = ">=3.12"
+dependencies = [
+    "ragas",
+    "openai",
+    "pandas",
+    "qdrant-client",
+]
