@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from io import StringIO
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
@@ -98,4 +98,8 @@ def list_benchmark_artifacts(results_dir: Path = RESULTS_DIR) -> List[Path]:
         *results_dir.glob("*.json"),
         *results_dir.glob("*.csv"),
     ]
-    return sorted(candidates, key=lambda path: path.stat().st_mtime, reverse=True)
+    return sorted(
+        candidates,
+        key=lambda path: (path.stat().st_mtime_ns, path.name.lower()),
+        reverse=True,
+    )

@@ -3,10 +3,8 @@ import pandas as pd
 from dataclasses import dataclass
 from typing import List, Dict, Any, Optional
 from datetime import datetime
-import json
 from pathlib import Path
 
-from ..config import config, RESULTS_DIR
 from ..retrieval import RetrievalPipeline, VectorStore
 from ..ingestion import DocumentChunker
 from .datasets import RetrievalBenchmarkDataset

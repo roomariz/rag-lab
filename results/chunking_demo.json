@@ -1,0 +1,31 @@
+{
+  "artifact_type": "chunking_quality_benchmark",
+  "experiment_name": "chunking_demo",
+  "timestamp": "2026-05-06T21:30:51+00:00",
+  "config": {
+    "top_k": 5,
+    "dataset_name": "demo_dataset",
+    "strategies": [
+      {
+        "name": "balanced",
+        "chunk_size": 512,
+        "chunk_overlap": 64,
+        "separators": null
+      }
+    ]
+  },
+  "summary": {
+    "mean_recall_at_k": 1.0,
+    "num_strategies": 1.0
+  },
+  "metadata": {
+    "documents": [
+      {
+        "name": "docker.md",
+        "text": "Docker containers."
+      }
+    ],
+    "strategy_summary_csv": "chunking_strategy,chunk_size,chunk_overlap,num_chunks,avg_chunk_size,mean_recall_at_k\nbalanced,512,64,4,128.0,1.0\n"
+  },
+  "results_csv": "query,chunking_strategy,chunk_size,chunk_overlap,mean_recall_at_k\nWhat is Docker?,balanced,512,64,1.0\n"
+}

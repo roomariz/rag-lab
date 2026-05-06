@@ -1,0 +1,113 @@
+{
+  "run_id": "20260506T214313157179Z",
+  "created_at": "2026-05-06T21:43:17.437661+00:00",
+  "collection_name": "demo",
+  "embed_model": "nomic-embed-text:latest",
+  "chunk_size": 512,
+  "chunk_overlap": 50,
+  "separators": [
+    "\n\n",
+    "\n",
+    " ",
+    ".",
+    ",",
+    "\u200b"
+  ],
+  "source_paths": [
+    "D:\\workspace\\open-source\\ragas\\implementation_plan.md",
+    "D:\\workspace\\open-source\\ragas\\requirements.txt",
+    "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\SOURCES.txt",
+    "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\dependency_links.txt",
+    "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\requires.txt",
+    "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\top_level.txt",
+    "D:\\workspace\\open-source\\ragas\\task.md"
+  ],
+  "source_files": [
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\implementation_plan.md",
+      "filename": "implementation_plan.md",
+      "file_hash": "550c122aee25db18b2aaf4fed39f5061a4900e5a8bc958519a856ef0b8dd0cdc",
+      "num_chars": 4996,
+      "num_bytes": 5023,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 16
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\requirements.txt",
+      "filename": "requirements.txt",
+      "file_hash": "1954d71d87c20fdc9b3d1fe2898d5568cd2e4c8068e790a2126ebe7ee6d6c10f",
+      "num_chars": 6551,
+      "num_bytes": 6094,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 14
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\SOURCES.txt",
+      "filename": "SOURCES.txt",
+      "file_hash": "080b30dcad0c3609fd7a305e1515f95cda454fc3b14790b706c3c8054479de58",
+      "num_chars": 770,
+      "num_bytes": 731,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 2
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\dependency_links.txt",
+      "filename": "dependency_links.txt",
+      "file_hash": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "num_chars": 0,
+      "num_bytes": 1,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 0
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\requires.txt",
+      "filename": "requires.txt",
+      "file_hash": "6caaddcd8b0ed8e2ab7cfff34e6eccab604e3025642ea5252bcf630f756c2da1",
+      "num_chars": 33,
+      "num_bytes": 34,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\top_level.txt",
+      "filename": "top_level.txt",
+      "file_hash": "dbcfa48b4ce4c838b395187f9993107ba11968d3f13f518dfb73ee2e5dfe30cb",
+      "num_chars": 96,
+      "num_bytes": 97,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\task.md",
+      "filename": "task.md",
+      "file_hash": "d93b38c145602f6399f13d9a8657b78e483479232bb0040b5cb62922f7999207",
+      "num_chars": 7572,
+      "num_bytes": 7616,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 23
+      }
+    }
+  ],
+  "total_documents": 7,
+  "total_chunks": 57,
+  "vector_size": 768,
+  "qdrant_host": "localhost",
+  "qdrant_port": 6333,
+  "extra_metadata": {
+    "indexed_chunks": 57,
+    "recreate_collection": true
+  }
+}

@@ -10,6 +10,14 @@ from ..retrieval.vector_store import VectorStore
 from .chunker import Chunk, DocumentChunker
 from .manifest import IngestionManifest, SourceFileRecord
 
+_IGNORED_PATH_PARTS = {
+    ".git",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "node_modules",
+}
+
 
 @dataclass
 class IngestionResult:
@@ -33,10 +41,34 @@ def _normalize_sources(sources: Sequence[str | os.PathLike[str]] | str | os.Path
     for source in sources:
         path = Path(source).expanduser().resolve()
         if path.is_dir():
-            for candidate in sorted(path.rglob("*")):
-                if candidate.is_file() and candidate.suffix.lower() in config.ingestion.supported_extensions:
+            for root, dirnames, filenames in os.walk(path):
+                root_path = Path(root)
+                dirnames[:] = [
+                    dirname
+                    for dirname in sorted(dirnames)
+                    if dirname not in _IGNORED_PATH_PARTS and not dirname.startswith(".")
+                ]
+
+                if any(
+                    part in _IGNORED_PATH_PARTS or part.startswith(".")
+                    for part in root_path.parts
+                ):
+                    continue
+
+                for filename in sorted(filenames):
+                    candidate = root_path / filename
+                    if candidate.suffix.lower() not in config.ingestion.supported_extensions:
+                        continue
+                    if any(part.endswith(".egg-info") for part in candidate.parts):
+                        continue
+                    if any(part in _IGNORED_PATH_PARTS or part.startswith(".") for part in candidate.parts):
+                        continue
                     files.append(candidate.resolve())
         elif path.is_file():
+            if any(part.endswith(".egg-info") for part in path.parts):
+                continue
+            if any(part in _IGNORED_PATH_PARTS or part.startswith(".") for part in path.parts):
+                continue
             files.append(path)
         else:
             raise FileNotFoundError(f"Source path does not exist: {path}")
@@ -50,6 +82,10 @@ def _normalize_sources(sources: Sequence[str | os.PathLike[str]] | str | os.Path
             ordered.append(file_path)
 
     return sorted(ordered, key=lambda item: str(item))
+
+
+def preview_supported_sources(sources: Sequence[str | os.PathLike[str]] | str | os.PathLike[str]) -> List[Path]:
+    return _normalize_sources(sources)
 
 
 def _file_hash(path: Path) -> str:

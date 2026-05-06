@@ -49,3 +49,30 @@ def test_normalize_sources_discovers_supported_files(tmp_path: Path):
     files = _normalize_sources(tmp_path)
 
     assert [file_path.name for file_path in files] == ["a.txt", "b.md"]
+
+
+def test_normalize_sources_skips_hidden_and_virtualenv_dirs(tmp_path: Path):
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs" / "visible.md").write_text("keep me")
+    (tmp_path / ".venv").mkdir()
+    (tmp_path / ".venv" / "Lib").mkdir()
+    (tmp_path / ".venv" / "Lib" / "site-packages").mkdir(parents=True, exist_ok=True)
+    (tmp_path / ".venv" / "Lib" / "site-packages" / "api.md").write_text("ignore me")
+    (tmp_path / ".hidden.md").write_text("ignore me too")
+
+    files = _normalize_sources(tmp_path)
+
+    assert [file_path.name for file_path in files] == ["visible.md"]
+
+
+def test_normalize_sources_ignores_virtualenv_packages_tree(tmp_path: Path):
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs" / "keep.md").write_text("keep me")
+    (tmp_path / ".venv").mkdir()
+    (tmp_path / ".venv" / "Lib").mkdir(parents=True, exist_ok=True)
+    (tmp_path / ".venv" / "Lib" / "site-packages").mkdir(parents=True, exist_ok=True)
+    (tmp_path / ".venv" / "Lib" / "site-packages" / "ignore.md").write_text("ignore me")
+
+    files = _normalize_sources(tmp_path)
+
+    assert [file_path.name for file_path in files] == ["keep.md"]

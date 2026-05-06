@@ -63,6 +63,9 @@ class VectorStore:
         except Exception:
             return False
 
+    def collection_exists(self) -> bool:
+        return self._collection_exists()
+
     def _ensure_collection(self, vector_size: int):
         if self._collection_exists():
             return

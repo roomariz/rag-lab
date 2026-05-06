@@ -1,0 +1,617 @@
+{
+  "run_id": "20260506T213417402545Z",
+  "created_at": "2026-05-06T21:34:24.289634+00:00",
+  "collection_name": "demo",
+  "embed_model": "nomic-embed-text:latest",
+  "chunk_size": 512,
+  "chunk_overlap": 50,
+  "separators": [
+    "\n\n",
+    "\n",
+    " ",
+    ".",
+    ",",
+    "\u200b"
+  ],
+  "source_paths": [
+    "D:\\workspace\\open-source\\ragas\\.pytest_cache\\README.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\anyio-4.13.0.dist-info\\entry_points.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\anyio-4.13.0.dist-info\\top_level.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\certifi-2026.4.22.dist-info\\top_level.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\colorama-0.4.6.dist-info\\licenses\\LICENSE.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\distro-1.9.0.dist-info\\entry_points.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\distro-1.9.0.dist-info\\top_level.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\h11-0.16.0.dist-info\\licenses\\LICENSE.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\h11-0.16.0.dist-info\\top_level.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\httpcore-1.0.9.dist-info\\licenses\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\httpx-0.28.1.dist-info\\entry_points.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\httpx-0.28.1.dist-info\\licenses\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\idna-3.13.dist-info\\licenses\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\entry_points.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\LICENSE.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\_core\\include\\numpy\\libdivide\\LICENSE.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\_core\\src\\multiarray\\dragon4_LICENSE.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\_core\\src\\npysort\\x86-simd-sort\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\fft\\pocketfft\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\linalg\\lapack_lite\\LICENSE.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\src\\distributions\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\src\\mt19937\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\src\\pcg64\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\src\\philox\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\src\\sfc64\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\src\\splitmix64\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\random\\LICENSE.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy\\_core\\tests\\data\\umath-validation-set-README.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy\\ma\\API_CHANGES.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy\\random\\LICENSE.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\openai\\resources\\conversations\\api.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\openai\\resources\\realtime\\api.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\openai\\resources\\responses\\api.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\openai\\resources\\webhooks\\api.md",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\pandas-3.0.2.dist-info\\entry_points.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\python_dateutil-2.9.0.post0.dist-info\\top_level.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\six-1.17.0.dist-info\\top_level.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\sniffio-1.3.1.dist-info\\top_level.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\tqdm-4.67.3.dist-info\\entry_points.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\tqdm-4.67.3.dist-info\\top_level.txt",
+    "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\tzdata-2026.2.dist-info\\top_level.txt",
+    "D:\\workspace\\open-source\\ragas\\implementation_plan.md",
+    "D:\\workspace\\open-source\\ragas\\requirements.txt",
+    "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\SOURCES.txt",
+    "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\dependency_links.txt",
+    "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\requires.txt",
+    "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\top_level.txt",
+    "D:\\workspace\\open-source\\ragas\\task.md"
+  ],
+  "source_files": [
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.pytest_cache\\README.md",
+      "filename": "README.md",
+      "file_hash": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad",
+      "num_chars": 301,
+      "num_bytes": 302,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\anyio-4.13.0.dist-info\\entry_points.txt",
+      "filename": "entry_points.txt",
+      "file_hash": "fdde98bbaba269998d7b40b2768c22ac4f429a0ef350bda0d3cb50a684b742f7",
+      "num_chars": 38,
+      "num_bytes": 39,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\anyio-4.13.0.dist-info\\top_level.txt",
+      "filename": "top_level.txt",
+      "file_hash": "420952322597f3fe5da685401081dd118cefa8531d4985a60a3ead630d884e44",
+      "num_chars": 5,
+      "num_bytes": 6,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\certifi-2026.4.22.dist-info\\top_level.txt",
+      "filename": "top_level.txt",
+      "file_hash": "28cbb8bd409fb232eb90f6d235d81d7a44bea552730402453bffe723c345ebe5",
+      "num_chars": 7,
+      "num_bytes": 8,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\colorama-0.4.6.dist-info\\licenses\\LICENSE.txt",
+      "filename": "LICENSE.txt",
+      "file_hash": "cac35c02686e5d04a5a7140bfb3b36e73aed496656e891102e428886d7930318",
+      "num_chars": 1485,
+      "num_bytes": 1491,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 4
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\distro-1.9.0.dist-info\\entry_points.txt",
+      "filename": "entry_points.txt",
+      "file_hash": "dce6e3a9031b875c5e410c2c5ad81b7c33433030fe11b8204753a3ff3f2cf617",
+      "num_chars": 45,
+      "num_bytes": 46,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\distro-1.9.0.dist-info\\top_level.txt",
+      "filename": "top_level.txt",
+      "file_hash": "8a475efd5fd711d481a9a19de6d12b88dff0cd81cb8135ffcd5b65b062c7bf04",
+      "num_chars": 6,
+      "num_bytes": 7,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\h11-0.16.0.dist-info\\licenses\\LICENSE.txt",
+      "filename": "LICENSE.txt",
+      "file_hash": "37db5bb85926db28a427a25867f10b1232003aea1be69ccb851138adb8e6f361",
+      "num_chars": 1117,
+      "num_bytes": 1124,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 4
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\h11-0.16.0.dist-info\\top_level.txt",
+      "filename": "top_level.txt",
+      "file_hash": "17b742e23977cde87c4c61c43da589acc6deba859b4b7efd1b0762f98bdd722b",
+      "num_chars": 3,
+      "num_bytes": 4,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\httpcore-1.0.9.dist-info\\licenses\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "fdcb59154c74cbaba16a11242f7740bea9f23d6feb5547917d8c5f94a80392a5",
+      "num_chars": 1511,
+      "num_bytes": 1518,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 4
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\httpx-0.28.1.dist-info\\entry_points.txt",
+      "filename": "entry_points.txt",
+      "file_hash": "da55647509b12c0d6934c812376795f3da3dd070997b3866370b32eabc8a0d20",
+      "num_chars": 36,
+      "num_bytes": 37,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\httpx-0.28.1.dist-info\\licenses\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "4ec59d544f12b5f539a3a716fd321ac58ccd8030b465221f2c880200cdf28d8d",
+      "num_chars": 1544,
+      "num_bytes": 1508,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 4
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\idna-3.13.dist-info\\licenses\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "1a9a4f0e3d479a27240ddd59a9137a66ab4a0f9dfdc8ca6188cc0bfd85187f04",
+      "num_chars": 1535,
+      "num_bytes": 1541,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 4
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\entry_points.txt",
+      "filename": "entry_points.txt",
+      "file_hash": "ec26fade0c8bdac211a6c1dd003a65eb16885b925395423e93fcaa115af4052c",
+      "num_chars": 218,
+      "num_bytes": 220,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\LICENSE.txt",
+      "filename": "LICENSE.txt",
+      "file_hash": "a804dff0ead9fadc5293456410bcbfc32bf024be9c4513459663fb7b442d2341",
+      "num_chars": 45539,
+      "num_bytes": 45831,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 127
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\_core\\include\\numpy\\libdivide\\LICENSE.txt",
+      "filename": "LICENSE.txt",
+      "file_hash": "d544761558b510866c21f7e8a2d5716fca76e0b98117e3b6b86314db7244d150",
+      "num_chars": 1007,
+      "num_bytes": 1039,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 3
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\_core\\src\\multiarray\\dragon4_LICENSE.txt",
+      "filename": "dragon4_LICENSE.txt",
+      "file_hash": "b0fd592d4ead563148e3977e7b589169d46a5ef2ff133c755a81af880a3fc919",
+      "num_chars": 1407,
+      "num_bytes": 1441,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 4
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\_core\\src\\npysort\\x86-simd-sort\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "a732977853530066790c42817087f4829b518dd98d340c916acbfd227e39d3cb",
+      "num_chars": 1508,
+      "num_bytes": 1542,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 4
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\fft\\pocketfft\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "8db000e158c162e7249787852d8c69764706502ccee725c06641b31c1e95c8af",
+      "num_chars": 1489,
+      "num_bytes": 1523,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 5
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\linalg\\lapack_lite\\LICENSE.txt",
+      "filename": "LICENSE.txt",
+      "file_hash": "19060ef465e1797d682ee0fc3081bd25ab1395e995e43d25c9d13c95d9a3cd6b",
+      "num_chars": 2300,
+      "num_bytes": 2314,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 6
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "b4bc2f4fa1c95778f1ed3dd8f14706bece399475b978f9f34b5d3cd72521b48a",
+      "num_chars": 3492,
+      "num_bytes": 3582,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 10
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\src\\distributions\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "cf5619f25b112d5ce7c896efffc8e610bcb345dfadcc19f2c1460aa48fff2c9e",
+      "num_chars": 2780,
+      "num_bytes": 2805,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 8
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\src\\mt19937\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "92c10699884321f1c2947fe2a70ab23b0fbf1507f756d89dd08f38c61fc3d4fa",
+      "num_chars": 2911,
+      "num_bytes": 2986,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 8
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\src\\pcg64\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "41190663b77bee5302386495a07b7eabfbfa571aa0ae2f11da6764162062fc4f",
+      "num_chars": 1147,
+      "num_bytes": 1176,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 4
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\src\\philox\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "322ac46d870c8aeead6c53adcccc839296fb3c8e456eae155081297daf7f8013",
+      "num_chars": 1503,
+      "num_bytes": 1540,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 4
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\src\\sfc64\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "28cad82ce1379dc529df30da78ec012d7d0d1d576b03ddcb93388aee53659f59",
+      "num_chars": 1258,
+      "num_bytes": 1253,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 4
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy-2.4.4.dist-info\\licenses\\numpy\\random\\src\\splitmix64\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "454ec7350e478e037061850b67395753b425b1cb0a34bbc26290b020bf89d763",
+      "num_chars": 332,
+      "num_bytes": 340,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy\\_core\\include\\numpy\\random\\LICENSE.txt",
+      "filename": "LICENSE.txt",
+      "file_hash": "d544761558b510866c21f7e8a2d5716fca76e0b98117e3b6b86314db7244d150",
+      "num_chars": 1007,
+      "num_bytes": 1039,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 3
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy\\_core\\tests\\data\\umath-validation-set-README.txt",
+      "filename": "umath-validation-set-README.txt",
+      "file_hash": "19fae4994ff04e3a4b90e7ed583b866b2103755dd13e93761915505fad558162",
+      "num_chars": 958,
+      "num_bytes": 982,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 2
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy\\ma\\API_CHANGES.txt",
+      "filename": "API_CHANGES.txt",
+      "file_hash": "537f7303ceda33f38826110abc780bd5163596130965cd588f70c62f06cf6c5d",
+      "num_chars": 3424,
+      "num_bytes": 3540,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 8
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\numpy\\random\\LICENSE.md",
+      "filename": "LICENSE.md",
+      "file_hash": "b4bc2f4fa1c95778f1ed3dd8f14706bece399475b978f9f34b5d3cd72521b48a",
+      "num_chars": 3492,
+      "num_bytes": 3582,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 10
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\openai\\resources\\conversations\\api.md",
+      "filename": "api.md",
+      "file_hash": "6a36bb38e1e971829eba8655fe5056053f79d3ee2d75554e7ff3361b0457bf79",
+      "num_chars": 3034,
+      "num_bytes": 3047,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 10
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\openai\\resources\\realtime\\api.md",
+      "filename": "api.md",
+      "file_hash": "c5b3f4d585092ce5540ea1d70082620eea3b3532ec8e99fc76a0a5b457facc1e",
+      "num_chars": 5324,
+      "num_bytes": 5162,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 14
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\openai\\resources\\responses\\api.md",
+      "filename": "api.md",
+      "file_hash": "e0b483006d791a80146920e0c3b273c4f475e5d0d10b7ce7eec9087cb18567ae",
+      "num_chars": 7035,
+      "num_bytes": 6744,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 18
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\openai\\resources\\webhooks\\api.md",
+      "filename": "api.md",
+      "file_hash": "401516749b93882fcd3616ebed4e199af734f71e825f93c48b28538b35f6c905",
+      "num_chars": 637,
+      "num_bytes": 610,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 3
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\pandas-3.0.2.dist-info\\entry_points.txt",
+      "filename": "entry_points.txt",
+      "file_hash": "3952ca3443ecf90ec85b2a5604be9fc6fe7aff3b78b119c423bcdac28eb2ff4c",
+      "num_chars": 67,
+      "num_bytes": 69,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\python_dateutil-2.9.0.post0.dist-info\\top_level.txt",
+      "filename": "top_level.txt",
+      "file_hash": "e2d8dd5a485166f17b2c0fc161efcbf60076c3fa766becf9cba02b8da464a2df",
+      "num_chars": 8,
+      "num_bytes": 9,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\six-1.17.0.dist-info\\top_level.txt",
+      "filename": "top_level.txt",
+      "file_hash": "fe2547fe2604b445e70fc9d819062960552f9145bdb043b51986e478a4806a2b",
+      "num_chars": 3,
+      "num_bytes": 4,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\sniffio-1.3.1.dist-info\\top_level.txt",
+      "filename": "top_level.txt",
+      "file_hash": "bfd5095c6b390b275d095780a979108963aba69e96b71e86791acfb7dfa38c78",
+      "num_chars": 7,
+      "num_bytes": 8,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\tqdm-4.67.3.dist-info\\entry_points.txt",
+      "filename": "entry_points.txt",
+      "file_hash": "45e2421fb522dd9ca1e8cd7a1383a1b19d6853b5ad31709f6eda3206118edbd6",
+      "num_chars": 38,
+      "num_bytes": 39,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\tqdm-4.67.3.dist-info\\top_level.txt",
+      "filename": "top_level.txt",
+      "file_hash": "34b89424d7e673d02dd79b3b254462c2fa8c123522f46e4f30646b98c6333523",
+      "num_chars": 4,
+      "num_bytes": 5,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\.venv\\Lib\\site-packages\\tzdata-2026.2.dist-info\\top_level.txt",
+      "filename": "top_level.txt",
+      "file_hash": "30ee90a82d3146b37aec687dc54fe732669dc015656333cd92afe1e2062ecda4",
+      "num_chars": 6,
+      "num_bytes": 7,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\implementation_plan.md",
+      "filename": "implementation_plan.md",
+      "file_hash": "550c122aee25db18b2aaf4fed39f5061a4900e5a8bc958519a856ef0b8dd0cdc",
+      "num_chars": 4996,
+      "num_bytes": 5023,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 16
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\requirements.txt",
+      "filename": "requirements.txt",
+      "file_hash": "1954d71d87c20fdc9b3d1fe2898d5568cd2e4c8068e790a2126ebe7ee6d6c10f",
+      "num_chars": 6551,
+      "num_bytes": 6094,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 14
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\SOURCES.txt",
+      "filename": "SOURCES.txt",
+      "file_hash": "080b30dcad0c3609fd7a305e1515f95cda454fc3b14790b706c3c8054479de58",
+      "num_chars": 770,
+      "num_bytes": 731,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 2
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\dependency_links.txt",
+      "filename": "dependency_links.txt",
+      "file_hash": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "num_chars": 0,
+      "num_bytes": 1,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 0
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\requires.txt",
+      "filename": "requires.txt",
+      "file_hash": "6caaddcd8b0ed8e2ab7cfff34e6eccab604e3025642ea5252bcf630f756c2da1",
+      "num_chars": 33,
+      "num_bytes": 34,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\src\\ragas.egg-info\\top_level.txt",
+      "filename": "top_level.txt",
+      "file_hash": "dbcfa48b4ce4c838b395187f9993107ba11968d3f13f518dfb73ee2e5dfe30cb",
+      "num_chars": 96,
+      "num_bytes": 97,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    },
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\task.md",
+      "filename": "task.md",
+      "file_hash": "d93b38c145602f6399f13d9a8657b78e483479232bb0040b5cb62922f7999207",
+      "num_chars": 7572,
+      "num_bytes": 7616,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 23
+      }
+    }
+  ],
+  "total_documents": 49,
+  "total_chunks": 349,
+  "vector_size": 768,
+  "qdrant_host": "localhost",
+  "qdrant_port": 6333,
+  "extra_metadata": {
+    "indexed_chunks": 349,
+    "recreate_collection": true
+  }
+}

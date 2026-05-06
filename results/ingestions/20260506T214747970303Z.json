@@ -1,0 +1,41 @@
+{
+  "run_id": "20260506T214747970303Z",
+  "created_at": "2026-05-06T21:47:51.342007+00:00",
+  "collection_name": "demo",
+  "embed_model": "nomic-embed-text:latest",
+  "chunk_size": 512,
+  "chunk_overlap": 50,
+  "separators": [
+    "\n\n",
+    "\n",
+    " ",
+    ".",
+    ",",
+    "\u200b"
+  ],
+  "source_paths": [
+    "D:\\workspace\\open-source\\ragas\\data\\docs\\sample.md"
+  ],
+  "source_files": [
+    {
+      "path": "D:\\workspace\\open-source\\ragas\\data\\docs\\sample.md",
+      "filename": "sample.md",
+      "file_hash": "dbf5c3f6795b2fa15d54c36ef623c91d6d8f348846873bf9dd523055155d2ff8",
+      "num_chars": 238,
+      "num_bytes": 239,
+      "status": "processed",
+      "metadata": {
+        "chunk_count": 1
+      }
+    }
+  ],
+  "total_documents": 1,
+  "total_chunks": 1,
+  "vector_size": 768,
+  "qdrant_host": "localhost",
+  "qdrant_port": 6333,
+  "extra_metadata": {
+    "indexed_chunks": 1,
+    "recreate_collection": true
+  }
+}

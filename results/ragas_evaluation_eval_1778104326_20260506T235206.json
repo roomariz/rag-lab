@@ -1,0 +1,22 @@
+{
+  "artifact_type": "ragas_evaluation",
+  "experiment_name": "eval_1778104326",
+  "timestamp": "2026-05-06T23:52:06",
+  "config": {
+    "llm_model": "mistral:latest",
+    "embed_model": "nomic-embed-text:latest"
+  },
+  "summary": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.7649554007397447,
+    "context_precision": 0.9999999999,
+    "context_recall": 0.75
+  },
+  "metadata": {
+    "latencies": {
+      "evaluation_time": 56.62889539999742
+    },
+    "timestamp": "2026-05-06T23:52:06.705623"
+  },
+  "results_csv": "user_input,retrieved_contexts,response,reference,faithfulness,answer_relevancy,context_precision,context_recall\r\nWhat is Docker used for?,\"['Docker is an open platform for developing, shipping, and running applications using lightweight portable containers.']\",Docker is used to develop and run applications inside portable containers.,Docker runs applications inside containers.,1.0,0.9999999999999998,0.9999999999,0.5\r\nWhat is Kubernetes?,['Kubernetes is an open-source container orchestration platform for automating deployment and scaling.'],Kubernetes automates deployment and scaling of containerized applications.,Kubernetes is used for container orchestration.,1.0,0.5299108014794895,0.9999999999,1.0\r\n"
+}

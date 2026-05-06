@@ -10,15 +10,28 @@ try:
 except ImportError:  # pragma: no cover - dependency guard
     OpenAI = None
 
-from ragas import evaluate
-from ragas.dataset_schema import SingleTurnSample
-from ragas import EvaluationDataset
-from ragas.metrics._faithfulness import Faithfulness
-from ragas.metrics._answer_relevance import ResponseRelevancy
-from ragas.metrics._context_precision import ContextPrecision
-from ragas.metrics._context_recall import ContextRecall
-from ragas.llms import llm_factory
-from ragas.embeddings.base import BaseRagasEmbeddings
+try:
+    from ragas import evaluate
+    from ragas.dataset_schema import SingleTurnSample
+    from ragas import EvaluationDataset
+    from ragas.metrics._faithfulness import Faithfulness
+    from ragas.metrics._answer_relevance import ResponseRelevancy
+    from ragas.metrics._context_precision import ContextPrecision
+    from ragas.metrics._context_recall import ContextRecall
+    from ragas.llms import llm_factory
+    from ragas.embeddings.base import BaseRagasEmbeddings
+except ImportError:  # pragma: no cover - optional dependency guard
+    evaluate = None
+    SingleTurnSample = None
+    EvaluationDataset = None
+    Faithfulness = None
+    ResponseRelevancy = None
+    ContextPrecision = None
+    ContextRecall = None
+    llm_factory = None
+
+    class BaseRagasEmbeddings:  # type: ignore[no-redef]
+        pass
 
 from ..config import config
 
@@ -59,6 +72,22 @@ class OllamaEmbeddings(BaseRagasEmbeddings):
         return self.embed_documents(texts)
 
 
+def _aggregate_ragas_metrics(frame: pd.DataFrame) -> Dict[str, float]:
+    metric_names = [
+        "faithfulness",
+        "answer_relevancy",
+        "context_precision",
+        "context_recall",
+    ]
+    aggregated: Dict[str, float] = {}
+    for metric in metric_names:
+        if metric in frame.columns and not frame[metric].empty:
+            aggregated[metric] = float(frame[metric].mean())
+        else:
+            aggregated[metric] = 0.0
+    return aggregated
+
+
 @dataclass
 class BenchmarkResult:
     experiment_name: str
@@ -81,11 +110,15 @@ class RAGEvaluator:
                 api_key="ollama",
             )
 
-        self.llm = llm_factory(self.llm_model, client=self._client) if self._client is not None else None
+        self.llm = (
+            llm_factory(self.llm_model, client=self._client)
+            if self._client is not None and llm_factory is not None
+            else None
+        )
         self.embeddings = OllamaEmbeddings(embed_model=self.embed_model)
 
         self.metrics = []
-        if self.llm is not None:
+        if self.llm is not None and all(metric is not None for metric in [Faithfulness, ResponseRelevancy, ContextPrecision, ContextRecall]):
             self.metrics = [
                 Faithfulness(llm=self.llm),
                 ResponseRelevancy(llm=self.llm, embeddings=self.embeddings),
@@ -102,7 +135,7 @@ class RAGEvaluator:
     ) -> BenchmarkResult:
         from datetime import datetime
 
-        if self.llm is None:
+        if self.llm is None or evaluate is None or SingleTurnSample is None or EvaluationDataset is None:
             raise RuntimeError("openai is required to run RAGAS evaluation.")
 
         samples = []
@@ -131,12 +164,7 @@ class RAGEvaluator:
 
         df = result.to_pandas()
 
-        agg_metrics = {
-            "faithfulness": result.get("faithfulness", 0),
-            "answer_relevancy": result.get("answer_relevancy", 0),
-            "context_precision": result.get("context_precision", 0),
-            "context_recall": result.get("context_recall", 0),
-        }
+        agg_metrics = _aggregate_ragas_metrics(df)
 
         return BenchmarkResult(
             experiment_name=f"eval_{int(time.time())}",
