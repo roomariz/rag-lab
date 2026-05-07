@@ -49,6 +49,9 @@ class RetrievalExperiment:
                     "query": query,
                     "num_retrieved": len(result.retrieved_chunks),
                     "retrieval_latency": result.retrieval_latency,
+                    "retrieval_duration": result.timings.get("retrieval_duration", result.retrieval_latency),
+                    "generation_duration": result.timings.get("generation_duration", result.generation_latency),
+                    "total_duration": result.timings.get("total_duration", result.total_latency),
                     "retrieved_chunks": retrieved_texts,
                 })
 
@@ -80,6 +83,7 @@ class RetrievalExperiment:
             frame["summary_mrr"] = benchmark.summary.get("mean_mrr", 0.0)
             frame["summary_retrieval_accuracy"] = benchmark.summary.get("mean_retrieval_accuracy", 0.0)
             frame["summary_retrieval_latency"] = benchmark.summary.get("mean_retrieval_latency", 0.0)
+            frame["summary_retrieval_duration"] = benchmark.summary.get("mean_retrieval_duration", 0.0)
             results.append(frame)
 
         return pd.concat(results, ignore_index=True) if results else pd.DataFrame()
@@ -124,6 +128,9 @@ class RetrievalExperiment:
                     "num_chunks": len(all_chunks),
                     "num_retrieved": len(result.retrieved_chunks),
                     "retrieval_latency": result.retrieval_latency,
+                    "retrieval_duration": result.timings.get("retrieval_duration", result.retrieval_latency),
+                    "generation_duration": result.timings.get("generation_duration", result.generation_latency),
+                    "total_duration": result.timings.get("total_duration", result.total_latency),
                 })
 
             vector_store.delete_collection()

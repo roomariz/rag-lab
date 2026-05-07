@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -12,6 +13,7 @@ import pandas as pd
 from ..config import config
 from ..ingestion.chunker import Chunk, DocumentChunker
 from ..retrieval import RetrievalPipeline
+from ..benchmarks.timing import TimingBreakdown
 from .artifacts import BenchmarkArtifact, save_benchmark_artifact
 from .datasets import RetrievalBenchmarkDataset
 from .retrieval_metrics import evaluate_retrieval_benchmark
@@ -139,7 +141,9 @@ def run_chunking_quality_benchmark(
         )
 
         all_chunks: List[Chunk] = []
+        chunking_duration = 0.0
         for index, document in enumerate(docs):
+            chunk_start = time.perf_counter()
             chunks = chunker.chunk_text(
                 document["text"],
                 metadata={
@@ -151,6 +155,7 @@ def run_chunking_quality_benchmark(
                     **_strategy_metadata(strategy),
                 },
             )
+            chunking_duration += time.perf_counter() - chunk_start
             all_chunks.extend(chunks)
 
         collection_name = _make_collection_name(collection_prefix, strategy.name, run_id)
@@ -161,7 +166,7 @@ def run_chunking_quality_benchmark(
         )
 
         pipeline.vector_store.delete_collection()
-        pipeline.vector_store.add_chunks(
+        indexing_result = pipeline.vector_store.add_chunks(
             all_chunks,
             run_id=run_id,
             extra_payload={
@@ -170,6 +175,7 @@ def run_chunking_quality_benchmark(
                 **_strategy_metadata(strategy),
             },
         )
+        indexing_timings = TimingBreakdown.from_mapping(indexing_result.get("timings", {}))
 
         benchmark = evaluate_retrieval_benchmark(dataset, pipeline)
         frame = benchmark.per_query_results.copy()
@@ -181,11 +187,16 @@ def run_chunking_quality_benchmark(
         frame["num_documents"] = len(docs)
         frame["num_chunks"] = len(all_chunks)
         frame["avg_chunk_size"] = float(sum(len(chunk.text) for chunk in all_chunks) / len(all_chunks)) if all_chunks else 0.0
+        frame["chunking_duration"] = chunking_duration
+        frame["embedding_duration"] = indexing_timings.embedding_duration
+        frame["indexing_duration"] = indexing_timings.indexing_duration
         frame["strategy_recall_at_k"] = benchmark.summary.get("mean_recall_at_k", 0.0)
         frame["strategy_precision_at_k"] = benchmark.summary.get("mean_precision_at_k", 0.0)
         frame["strategy_hit_rate"] = benchmark.summary.get("mean_hit_rate", 0.0)
         frame["strategy_mrr"] = benchmark.summary.get("mean_mrr", 0.0)
         frame["strategy_retrieval_latency"] = benchmark.summary.get("mean_retrieval_latency", 0.0)
+        frame["strategy_retrieval_duration"] = benchmark.summary.get("mean_retrieval_duration", 0.0)
+        frame["strategy_total_duration"] = chunking_duration + indexing_timings.total_duration
         strategy_results.append(frame)
 
         summary_rows.append({
@@ -198,6 +209,11 @@ def run_chunking_quality_benchmark(
             "mean_mrr": benchmark.summary.get("mean_mrr", 0.0),
             "mean_retrieval_accuracy": benchmark.summary.get("mean_retrieval_accuracy", 0.0),
             "mean_retrieval_latency": benchmark.summary.get("mean_retrieval_latency", 0.0),
+            "mean_retrieval_duration": benchmark.summary.get("mean_retrieval_duration", 0.0),
+            "chunking_duration": chunking_duration,
+            "embedding_duration": indexing_timings.embedding_duration,
+            "indexing_duration": indexing_timings.indexing_duration,
+            "total_duration": chunking_duration + indexing_timings.total_duration,
             "run_id": run_id,
             "collection_name": collection_name,
             "embed_model": embed_model,
@@ -213,11 +229,16 @@ def run_chunking_quality_benchmark(
         "dataset_name": dataset.name,
         "top_k": top_k,
         "num_strategies": float(len(summary_rows)),
+        "mean_chunking_duration": float(strategy_summary["chunking_duration"].mean()) if not strategy_summary.empty else 0.0,
+        "mean_embedding_duration": float(strategy_summary["embedding_duration"].mean()) if not strategy_summary.empty else 0.0,
+        "mean_indexing_duration": float(strategy_summary["indexing_duration"].mean()) if not strategy_summary.empty else 0.0,
         "mean_hit_rate": float(strategy_summary["mean_hit_rate"].mean()) if not strategy_summary.empty else 0.0,
         "mean_recall_at_k": float(strategy_summary["mean_recall_at_k"].mean()) if not strategy_summary.empty else 0.0,
         "mean_precision_at_k": float(strategy_summary["mean_precision_at_k"].mean()) if not strategy_summary.empty else 0.0,
         "mean_mrr": float(strategy_summary["mean_mrr"].mean()) if not strategy_summary.empty else 0.0,
         "mean_retrieval_latency": float(strategy_summary["mean_retrieval_latency"].mean()) if not strategy_summary.empty else 0.0,
+        "mean_retrieval_duration": float(strategy_summary["mean_retrieval_duration"].mean()) if not strategy_summary.empty else 0.0,
+        "mean_total_duration": float(strategy_summary["total_duration"].mean()) if not strategy_summary.empty else 0.0,
     }
 
     return ChunkingBenchmarkResult(

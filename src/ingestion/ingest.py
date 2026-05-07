@@ -1,11 +1,13 @@
 import hashlib
 import os
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence
 
 from ..config import config
+from ..benchmarks.timing import TimingBreakdown
 from ..retrieval.vector_store import VectorStore
 from .chunker import Chunk, DocumentChunker
 from .manifest import IngestionManifest, SourceFileRecord
@@ -27,6 +29,7 @@ class IngestionResult:
     source_files: List[Path]
     chunks: List[Chunk]
     indexed_chunks: int
+    timings: Dict[str, float]
 
 
 def _now_run_id() -> str:
@@ -163,9 +166,11 @@ def ingest_corpus(
 
     all_chunks: List[Chunk] = []
     source_records: List[SourceFileRecord] = []
+    chunking_duration = 0.0
 
     for source_path in source_files:
         file_hash = _file_hash(source_path)
+        chunk_start = time.perf_counter()
         chunks = chunker.chunk_file(
             str(source_path),
             metadata={
@@ -180,6 +185,7 @@ def ingest_corpus(
                 "separators": separators,
             },
         )
+        chunking_duration += time.perf_counter() - chunk_start
 
         enriched_chunks: List[Chunk] = []
         for chunk in chunks:
@@ -218,6 +224,7 @@ def ingest_corpus(
             )
         )
 
+    index_start = time.perf_counter()
     index_result = vector_store.add_chunks(
         all_chunks,
         run_id=run_id,
@@ -226,6 +233,9 @@ def ingest_corpus(
             "embed_model": embed_model,
         },
     )
+    vector_timings = TimingBreakdown.from_mapping(index_result.get("timings", {}))
+    indexing_duration = vector_timings.indexing_duration or (time.perf_counter() - index_start)
+    embedding_duration = vector_timings.embedding_duration
 
     manifest = IngestionManifest(
         run_id=run_id,
@@ -245,6 +255,12 @@ def ingest_corpus(
         extra_metadata={
             "indexed_chunks": index_result.get("indexed", len(all_chunks)),
             "recreate_collection": recreate_collection,
+            "timings": TimingBreakdown(
+                chunking_duration=chunking_duration,
+                embedding_duration=embedding_duration,
+                indexing_duration=indexing_duration,
+                total_duration=chunking_duration + vector_timings.total_duration,
+            ).to_dict(),
         },
     )
 
@@ -257,4 +273,10 @@ def ingest_corpus(
         source_files=source_files,
         chunks=all_chunks,
         indexed_chunks=index_result.get("indexed", len(all_chunks)),
+        timings=TimingBreakdown(
+            chunking_duration=chunking_duration,
+            embedding_duration=embedding_duration,
+            indexing_duration=indexing_duration,
+            total_duration=chunking_duration + vector_timings.total_duration,
+        ).to_dict(),
     )

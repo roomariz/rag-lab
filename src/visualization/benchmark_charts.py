@@ -4,6 +4,8 @@ from typing import Dict
 
 import pandas as pd
 
+from ..benchmarks.timing import TIMING_FIELDS
+
 
 def create_benchmark_analytics_charts(results: pd.DataFrame) -> Dict[str, pd.DataFrame]:
     charts: Dict[str, pd.DataFrame] = {}
@@ -48,6 +50,32 @@ def create_benchmark_analytics_charts(results: pd.DataFrame) -> Dict[str, pd.Dat
 
     if "model" in results.columns and "mean_latency" in results.columns:
         charts["model_latency"] = results[["model", "mean_latency"]].copy()
+
+    model_metric_columns = [
+        column
+        for column in [
+            "document_embedding_latency",
+            "query_embedding_latency",
+            "mean_latency",
+            "mean_recall_at_k",
+            "mean_faithfulness",
+            "mean_retrieval_latency",
+            "mean_hit_rate",
+            "mean_precision_at_k",
+            "mean_mrr",
+        ]
+        if column in results.columns
+    ]
+    if "model" in results.columns and len(model_metric_columns) > 1:
+        charts["model_quality"] = results[["model", *model_metric_columns]].copy()
+
+    timing_columns = [column for column in TIMING_FIELDS if column in results.columns]
+    if timing_columns:
+        chart_columns = [column for column in ["model", "top_k", "chunking_strategy"] if column in results.columns]
+        if chart_columns:
+            charts["timing_columns"] = results[[*chart_columns[:1], *timing_columns]].copy()
+        else:
+            charts["timing_columns"] = results[timing_columns].copy()
 
     if "faithfulness" in results.columns:
         frame = results.copy()

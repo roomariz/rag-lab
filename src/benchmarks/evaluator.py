@@ -34,6 +34,7 @@ except ImportError:  # pragma: no cover - optional dependency guard
         pass
 
 from ..config import config
+from .timing import TimingBreakdown
 
 
 class OllamaEmbeddings(BaseRagasEmbeddings):
@@ -95,6 +96,7 @@ class BenchmarkResult:
     metrics: Dict[str, float]
     latencies: Dict[str, float]
     per_sample_results: pd.DataFrame
+    timings: Dict[str, float] = field(default_factory=dict)
 
 
 class RAGEvaluator:
@@ -170,8 +172,9 @@ class RAGEvaluator:
             experiment_name=f"eval_{int(time.time())}",
             timestamp=datetime.now().isoformat(),
             metrics=agg_metrics,
-            latencies={"evaluation_time": eval_time},
+            latencies={"evaluation_time": eval_time, "evaluation_duration": eval_time},
             per_sample_results=df,
+            timings=TimingBreakdown(evaluation_duration=eval_time, total_duration=eval_time).to_dict(),
         )
 
 

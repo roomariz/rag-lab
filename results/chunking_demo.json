@@ -1,7 +1,7 @@
 {
   "artifact_type": "chunking_quality_benchmark",
   "experiment_name": "chunking_demo",
-  "timestamp": "2026-05-06T21:30:51+00:00",
+  "timestamp": "2026-05-07T08:49:26+00:00",
   "config": {
     "top_k": 5,
     "dataset_name": "demo_dataset",

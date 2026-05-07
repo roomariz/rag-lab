@@ -62,11 +62,11 @@
 - [src/benchmarks/chunking_experiments.py](/mnt/d/workspace/open-source/ragas/src/benchmarks/chunking_experiments.py)
 
 ## 5. Embedding comparison
-- [ ] Compare `nomic-embed-text` against other local embedding models on quality and latency.
-- [ ] Add consistent benchmark outputs for faithfulness, recall, and retrieval behavior.
-- [ ] Make model comparison reusable by the dashboard.
-- [x] Partial progress: the dashboard can compare embedding latency across models and save the artifact.
-- [ ] Optional tests: [tests/unit/test_embedding_benchmarks.py](/mnt/d/workspace/open-source/ragas/tests/unit/test_embedding_benchmarks.py)
+- [x] Compare `nomic-embed-text` against other local embedding models on quality and latency.
+- [x] Add consistent benchmark outputs for faithfulness, recall, and retrieval behavior.
+- [x] Make model comparison reusable by the dashboard.
+- [x] The dashboard can compare embedding latency, retrieval quality, and faithfulness across models and save the artifact.
+- [x] Optional tests: [tests/unit/test_embedding_benchmarks.py](/mnt/d/workspace/open-source/ragas/tests/unit/test_embedding_benchmarks.py)
 
 ### Target files
 - [src/benchmarks/evaluator.py](/mnt/d/workspace/open-source/ragas/src/benchmarks/evaluator.py)
@@ -77,11 +77,11 @@
 - [src/benchmarks/embedding_benchmarks.py](/mnt/d/workspace/open-source/ragas/src/benchmarks/embedding_benchmarks.py)
 
 ## 6. Latency instrumentation
-- [ ] Standardize duration fields for chunking, embedding, indexing, retrieval, generation, and evaluation.
-- [ ] Use one timing schema across all outputs.
-- [ ] Make latency data available to the dashboard and plots without reshaping.
-- [x] Partial progress: retrieval and evaluation latency are captured, but ingestion and chunking timing are not yet threaded through.
-- [ ] Optional tests: [tests/unit/test_timing.py](/mnt/d/workspace/open-source/ragas/tests/unit/test_timing.py)
+- [x] Standardize duration fields for chunking, embedding, indexing, retrieval, generation, and evaluation.
+- [x] Use one timing schema across all outputs.
+- [x] Make latency data available to the dashboard and plots without reshaping.
+- [x] The dashboard and plots now consume the same timing schema, including ingestion and chunking timing.
+- [x] Optional tests: [tests/unit/test_timing.py](/mnt/d/workspace/open-source/ragas/tests/unit/test_timing.py)
 
 ### Target files
 - [src/retrieval/pipeline.py](/mnt/d/workspace/open-source/ragas/src/retrieval/pipeline.py)

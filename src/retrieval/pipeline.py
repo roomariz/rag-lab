@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 
 try:
@@ -12,6 +12,7 @@ except ImportError:  # pragma: no cover - dependency guard
     OpenAI = None
 
 from ..config import config
+from ..benchmarks.timing import TimingBreakdown
 from .vector_store import VectorStore, RetrievedChunk
 
 @dataclass
@@ -22,6 +23,7 @@ class RetrievalResult:
     retrieval_latency: float = 0.0
     generation_latency: float = 0.0
     total_latency: float = 0.0
+    timings: Dict[str, float] = field(default_factory=dict)
 
 class RetrievalPipeline:
     def __init__(
@@ -96,6 +98,11 @@ class RetrievalPipeline:
             generated_response, generation_latency = self.generate(query, contexts)
 
         total_latency = time.perf_counter() - start_total
+        timings = TimingBreakdown(
+            retrieval_duration=retrieval_latency,
+            generation_duration=generation_latency,
+            total_duration=total_latency,
+        ).to_dict()
 
         return RetrievalResult(
             query=query,
@@ -104,6 +111,7 @@ class RetrievalPipeline:
             retrieval_latency=retrieval_latency,
             generation_latency=generation_latency,
             total_latency=total_latency,
+            timings=timings,
         )
 
     def run_batch(

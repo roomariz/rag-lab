@@ -12,21 +12,34 @@ from .chunking_experiments import (
     run_chunking_quality_benchmark,
     save_chunking_benchmark,
 )
+from .embedding_benchmarks import (
+    EmbeddingBenchmark,
+    EmbeddingComparisonResult,
+    compare_embedding_models,
+    run_embedding_comparison,
+    save_embedding_comparison,
+)
+from .timing import TimingBreakdown, TIMING_FIELDS, normalize_timing_payload, attach_timing_columns
 from .artifacts import BenchmarkArtifact, load_benchmark_artifact, list_benchmark_artifacts, save_benchmark_artifact
 
 try:
-    from .evaluator import RAGEvaluator, BenchmarkResult, compare_embedding_models, EmbeddingBenchmark
+    from .evaluator import RAGEvaluator, BenchmarkResult
 except ImportError:  # pragma: no cover - optional evaluation dependencies
     RAGEvaluator = None
     BenchmarkResult = None
-    compare_embedding_models = None
-    EmbeddingBenchmark = None
 
 __all__ = [
     "RAGEvaluator",
     "BenchmarkResult",
     "compare_embedding_models",
     "EmbeddingBenchmark",
+    "EmbeddingComparisonResult",
+    "run_embedding_comparison",
+    "save_embedding_comparison",
+    "TimingBreakdown",
+    "TIMING_FIELDS",
+    "normalize_timing_payload",
+    "attach_timing_columns",
     "RetrievalQuery",
     "RetrievalBenchmarkDataset",
     "load_query_records",

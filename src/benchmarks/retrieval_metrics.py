@@ -95,6 +95,7 @@ def summarize_retrieval_metrics(per_query_results: pd.DataFrame) -> Dict[str, fl
             "mean_precision_at_k": 0.0,
             "mean_mrr": 0.0,
             "mean_retrieval_latency": 0.0,
+            "mean_retrieval_duration": 0.0,
         }
 
     summary = {
@@ -111,6 +112,11 @@ def summarize_retrieval_metrics(per_query_results: pd.DataFrame) -> Dict[str, fl
     else:
         summary["mean_retrieval_latency"] = 0.0
 
+    if "retrieval_duration" in per_query_results.columns:
+        summary["mean_retrieval_duration"] = float(per_query_results["retrieval_duration"].mean())
+    else:
+        summary["mean_retrieval_duration"] = summary["mean_retrieval_latency"]
+
     return summary
 
 
@@ -124,6 +130,7 @@ def evaluate_retrieval_benchmark(
         result = pipeline.run(query.query, include_generation=False)
         row = evaluate_query_retrieval(query, result.retrieved_chunks, pipeline.top_k)
         row["retrieval_latency"] = result.retrieval_latency
+        row["retrieval_duration"] = result.timings.get("retrieval_duration", result.retrieval_latency)
         row["collection_name"] = pipeline.vector_store.collection_name
         row["embed_model"] = pipeline.vector_store.embed_model
         rows.append(row)

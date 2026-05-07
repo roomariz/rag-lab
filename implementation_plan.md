@@ -38,24 +38,24 @@
 - [x] Current benchmark layer and dashboard view now cover chunking-quality experiments end to end.
 
 ## 5. Embedding comparison
-- [ ] Comparison harness for `nomic-embed-text` and other local embedding models.
-- [ ] Metrics for retrieval quality, faithfulness, and embedding latency.
+- [x] Comparison harness for `nomic-embed-text` and other local embedding models.
+- [x] Metrics for retrieval quality, faithfulness, and embedding latency.
 - [ ] Optionally embedding cost/resource usage if available locally.
-- [ ] Same corpus/query set can be run across multiple models.
-- [ ] Results include quality plus latency, not latency only.
-- [ ] Output is normalized enough to compare models directly.
-- [ ] Treat this as a benchmark layer, not a UI feature.
-- [x] Current partial coverage: the dashboard runs embedding latency comparisons and persists the results artifact.
+- [x] Same corpus/query set can be run across multiple models.
+- [x] Results include quality plus latency, not latency only.
+- [x] Output is normalized enough to compare models directly.
+- [x] Treat this as a benchmark layer, not a UI feature.
+- [x] Current dashboard coverage now spans latency, retrieval quality, and faithfulness comparisons across embedding models.
 
 ## 6. Latency instrumentation everywhere
-- [ ] Timing for ingestion, chunking, embedding, indexing, retrieval, reranking if added, and generation.
-- [ ] Unified result schema that records timestamps and durations.
-- [ ] Latency breakdown views for per-run and aggregate reporting.
-- [ ] Every experiment output includes comparable timing fields.
-- [ ] Latency is measured in a consistent way across benchmarks.
-- [ ] Dashboard and plots can consume the same timing schema.
-- [ ] This should be threaded through all earlier steps, not added after the fact.
-- [x] Current partial coverage: retrieval and evaluation latency are tracked, but ingestion and chunking are not yet normalized into the same schema.
+- [x] Timing for ingestion, chunking, embedding, indexing, retrieval, reranking if added, and generation.
+- [x] Unified result schema that records timestamps and durations.
+- [x] Latency breakdown views for per-run and aggregate reporting.
+- [x] Every experiment output includes comparable timing fields.
+- [x] Latency is measured in a consistent way across benchmarks.
+- [x] Dashboard and plots can consume the same timing schema.
+- [x] This should be threaded through all earlier steps, not added after the fact.
+- [x] Current coverage now includes ingestion and chunking timing normalized into the same schema.
 
 ## 7. Dashboard integration
 - [x] Streamlit app wired to real ingestion, indexing, retrieval, and benchmark outputs.

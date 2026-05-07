@@ -19,12 +19,13 @@ from src.ingestion import DocumentChunker, ingest_corpus
 from src.ingestion.ingest import preview_supported_sources
 from src.benchmarks import (
     RAGEvaluator,
-    compare_embedding_models,
     RetrievalExperiment,
     RetrievalBenchmarkDataset,
     ChunkingStrategySpec,
     run_chunking_quality_benchmark,
     save_chunking_benchmark,
+    run_embedding_comparison,
+    save_embedding_comparison,
     BenchmarkArtifact,
     list_benchmark_artifacts,
     load_benchmark_artifact,
@@ -106,6 +107,13 @@ def _parse_document_records(raw_json: str) -> list[dict]:
     parsed = json.loads(raw_json)
     if not isinstance(parsed, list):
         raise ValueError("Corpus documents must be a JSON list.")
+    return parsed
+
+
+def _parse_query_records(raw_json: str) -> list[dict]:
+    parsed = json.loads(raw_json)
+    if not isinstance(parsed, list):
+        raise ValueError("Query records must be a JSON list.")
     return parsed
 
 
@@ -234,22 +242,47 @@ with tab2:
                     "llm_model": evaluator.llm_model,
                     "embed_model": evaluator.embed_model,
                 },
-                metadata={"latencies": result.latencies, "timestamp": result.timestamp},
+                metadata={"latencies": result.latencies, "timings": result.timings, "timestamp": result.timestamp},
             )
             st.caption(f"Saved benchmark artifact: {artifact_path}")
 
 with tab3:
     st.header("Embedding Model Comparison")
 
-    if compare_embedding_models is None:
+    if run_embedding_comparison is None:
         st.warning("Embedding comparison dependencies are unavailable in this environment.")
     else:
-        st.info("Compare embedding model latency and quality across different models.")
+        st.info("Compare embedding latency, retrieval quality, and RAG faithfulness across local models.")
 
-        test_texts = st.text_area(
-            "Test texts (one per line):",
-            value="Docker is a platform for containerization.\nKubernetes orchestrates containers.\nSQL injection is a vulnerability.",
-        ).strip().split("\n")
+        default_corpus = [
+            {"name": "docker.md", "text": "Docker packages applications into portable containers."},
+            {"name": "kubernetes.md", "text": "Kubernetes orchestrates containerized workloads across clusters."},
+            {"name": "security.md", "text": "SQL injection is a code injection attack that targets databases."},
+        ]
+        default_queries = [
+            {
+                "query": "What is Docker used for?",
+                "relevant_sources": ["docker.md"],
+                "reference": "Docker packages applications into portable containers.",
+            },
+            {
+                "query": "What does Kubernetes do?",
+                "relevant_sources": ["kubernetes.md"],
+                "reference": "Kubernetes orchestrates containerized workloads across clusters.",
+            },
+        ]
+
+        corpus_raw = st.text_area(
+            "Corpus documents (JSON list):",
+            value=json.dumps(default_corpus, indent=2),
+            height=220,
+        )
+
+        query_raw = st.text_area(
+            "Labeled queries (JSON list):",
+            value=json.dumps(default_queries, indent=2),
+            height=220,
+        )
 
         models = st.multiselect(
             "Models to compare:",
@@ -257,38 +290,58 @@ with tab3:
             default=["nomic-embed-text:latest"],
         )
 
-        num_runs = st.slider("Number of runs", 1, 10, 3)
+        col1, col2 = st.columns(2)
+        with col1:
+            num_runs = st.slider("Embedding latency runs", 1, 10, 3)
+        with col2:
+            top_k = st.slider("Retrieval top-k", 1, 10, 5)
 
-        if st.button("Run Comparison", type="primary") and models and test_texts:
-            with st.spinner("Running benchmarks..."):
-                results = compare_embedding_models(
-                    texts=test_texts,
-                    models=models,
-                    num_runs=num_runs,
-                )
+        if st.button("Run Comparison", type="primary") and models:
+            try:
+                corpus_records = _parse_document_records(corpus_raw)
+                query_records = _parse_query_records(query_raw)
+            except ValueError as exc:
+                st.error(str(exc))
+            else:
+                with st.spinner("Running embedding comparison..."):
+                    result = run_embedding_comparison(
+                        texts=corpus_records,
+                        models=models,
+                        num_runs=num_runs,
+                        query_records=query_records,
+                        top_k=top_k,
+                        llm_model=config.llm_model,
+                    )
 
-            st.subheader("Results")
-            st.dataframe(results)
+                st.subheader("Model Summary")
+                st.dataframe(result.per_model_results)
 
-            st.subheader("Latency Comparison")
-            st.line_chart(results.set_index("model")["mean_latency"])
+                chart_frame = result.per_model_results.copy()
+                numeric_columns = [
+                    column
+                    for column in [
+                        "mean_latency",
+                        "document_embedding_latency",
+                        "query_embedding_latency",
+                        "mean_recall_at_k",
+                        "mean_faithfulness",
+                        "mean_retrieval_latency",
+                    ]
+                    if column in chart_frame.columns
+                ]
+                if numeric_columns:
+                    st.bar_chart(chart_frame.set_index("model")[numeric_columns])
 
-            artifact_path = _save_dashboard_artifact(
-                artifact_type="embedding_comparison",
-                experiment_name="embedding_comparison",
-                results=results,
-                summary={
-                    "num_models": len(models),
-                    "num_texts": len(test_texts),
-                    "mean_latency": float(results["mean_latency"].mean()) if not results.empty else 0.0,
-                },
-                config_payload={
-                    "models": models,
-                    "num_runs": num_runs,
-                    "text_count": len(test_texts),
-                },
-            )
-            st.caption(f"Saved benchmark artifact: {artifact_path}")
+                if not result.per_query_results.empty:
+                    st.subheader("Per-Query Retrieval Results")
+                    st.dataframe(result.per_query_results)
+
+                if not result.per_sample_results.empty:
+                    st.subheader("Per-Sample Faithfulness Results")
+                    st.dataframe(result.per_sample_results)
+
+                artifact_path = save_embedding_comparison(result)
+                st.caption(f"Saved benchmark artifact: {artifact_path}")
 
 with tab4:
     st.header("Retrieval Experiments")
@@ -330,7 +383,7 @@ with tab4:
                 st.dataframe(results)
 
                 st.subheader("Latency by K")
-                latency_by_k = results.groupby("top_k")["retrieval_latency"].mean()
+                latency_by_k = results.groupby("top_k")[["retrieval_latency", "retrieval_duration"]].mean()
                 st.line_chart(latency_by_k)
 
                 artifact_path = _save_dashboard_artifact(
@@ -341,6 +394,7 @@ with tab4:
                         "num_queries": len(queries),
                         "num_k_values": len(k_values),
                         "mean_retrieval_latency": float(results["retrieval_latency"].mean()) if not results.empty else 0.0,
+                        "mean_retrieval_duration": float(results["retrieval_duration"].mean()) if not results.empty and "retrieval_duration" in results.columns else 0.0,
                     },
                     config_payload={
                         "collection_name": exp.collection_name,
@@ -452,6 +506,12 @@ with tab4:
                         ]
                         st.bar_chart(summary_chart)
 
+                        st.subheader("Timing by Strategy")
+                        timing_chart = result.strategy_summary.set_index("chunking_strategy")[
+                            ["chunking_duration", "embedding_duration", "indexing_duration", "total_duration"]
+                        ]
+                        st.bar_chart(timing_chart)
+
                         st.subheader("Chunk Structure by Strategy")
                         st.dataframe(
                             result.strategy_summary[
@@ -463,6 +523,7 @@ with tab4:
                                     "avg_chunk_size",
                                     "mean_recall_at_k",
                                     "mean_precision_at_k",
+                                    "mean_retrieval_duration",
                                 ]
                             ]
                         )
@@ -545,13 +606,14 @@ with tab4:
                                     "precision_at_k",
                                     "mrr",
                                     "retrieval_latency",
+                                    "retrieval_duration",
                                 ]
                             ]
                             .mean()
                             .reset_index()
                         )
                         st.dataframe(summary)
-                        st.line_chart(summary.set_index("top_k")[["recall_at_k", "hit_rate", "retrieval_latency"]])
+                        st.line_chart(summary.set_index("top_k")[["recall_at_k", "hit_rate", "retrieval_latency", "retrieval_duration"]])
 
                         artifact_path = _save_dashboard_artifact(
                             artifact_type="labeled_retrieval_benchmark",
@@ -686,10 +748,18 @@ with tab5:
                     col3.metric("Indexed Chunks", result.indexed_chunks)
                     col4.metric("Vector Size", result.manifest.vector_size or 0)
 
+                    timing_cols = st.columns(4)
+                    timing_cols[0].metric("Chunking Duration", f"{result.timings.get('chunking_duration', 0.0):.3f}s")
+                    timing_cols[1].metric("Embedding Duration", f"{result.timings.get('embedding_duration', 0.0):.3f}s")
+                    timing_cols[2].metric("Indexing Duration", f"{result.timings.get('indexing_duration', 0.0):.3f}s")
+                    timing_cols[3].metric("Total Duration", f"{result.timings.get('total_duration', 0.0):.3f}s")
+
                     st.write("Manifest path:", result.manifest_path)
                     st.write("Collection info:", result.collection_info)
                     st.subheader("Manifest")
                     st.json(result.manifest.to_dict())
+                    st.subheader("Timing Breakdown")
+                    st.json(result.timings)
 
                     if result.chunks:
                         st.subheader("Sample Indexed Chunks")
@@ -778,6 +848,23 @@ with tab6:
                     st.bar_chart(chart.set_index("chunking_strategy")[structure_cols])
                 elif chart_name == "model_latency":
                     st.bar_chart(chart.set_index("model"))
+                elif chart_name == "model_quality":
+                    metric_cols = [col for col in chart.columns if col != "model"]
+                    st.bar_chart(chart.set_index("model")[metric_cols])
+                elif chart_name == "timing_columns":
+                    x_col = next((col for col in ["model", "top_k", "chunking_strategy"] if col in chart.columns), None)
+                    if x_col:
+                        metric_cols = [col for col in chart.columns if col != x_col]
+                        st.bar_chart(chart.set_index(x_col)[metric_cols])
+                    else:
+                        st.dataframe(chart)
+                elif chart_name == "timing_breakdown":
+                    x_col = next((col for col in ["model", "top_k", "chunking_strategy"] if col in chart.columns), None)
+                    if x_col:
+                        metric_cols = [col for col in chart.columns if col != x_col]
+                        st.bar_chart(chart.set_index(x_col)[metric_cols])
+                    else:
+                        st.dataframe(chart)
                 elif chart_name == "faithfulness":
                     index_col = "user_input" if "user_input" in chart.columns else "sample"
                     st.bar_chart(chart.set_index(index_col))

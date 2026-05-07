@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import os
 import uuid
+import time
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence
 
@@ -15,6 +16,7 @@ except ImportError:  # pragma: no cover - dependency guard
     QDRANT_AVAILABLE = False
 
 from ..config import config
+from ..benchmarks.timing import TimingBreakdown
 
 if TYPE_CHECKING:
     from ..ingestion.chunker import Chunk
@@ -51,7 +53,7 @@ class VectorStore:
 
     def _get_embeddings(self):
         if self._embeddings is None:
-            from ..benchmarks.evaluator import OllamaEmbeddings
+            from ..benchmarks.embedding_benchmarks import OllamaEmbeddings
 
             self._embeddings = OllamaEmbeddings(embed_model=self.embed_model)
         return self._embeddings
@@ -122,16 +124,31 @@ class VectorStore:
         extra_payload: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         if not chunks:
-            return {"indexed": 0, "vector_size": self.vector_size or 0}
+            return {
+                "indexed": 0,
+                "vector_size": self.vector_size or 0,
+                "timings": TimingBreakdown().to_dict(),
+            }
 
         texts = [chunk.text for chunk in chunks]
+        start_total = time.perf_counter()
+        embedding_start = time.perf_counter()
         embeddings = self._get_embeddings().embed_documents(texts)
+        embedding_duration = time.perf_counter() - embedding_start
         if not embeddings:
-            return {"indexed": 0, "vector_size": self.vector_size or 0}
+            return {
+                "indexed": 0,
+                "vector_size": self.vector_size or 0,
+                "timings": TimingBreakdown(
+                    embedding_duration=max(0.0, embedding_duration),
+                    total_duration=max(0.0, time.perf_counter() - start_total),
+                ).to_dict(),
+            }
 
         self.vector_size = self.vector_size or len(embeddings[0])
         self._ensure_collection(self.vector_size)
 
+        indexing_start = time.perf_counter()
         indexed = 0
         for start in range(0, len(chunks), batch_size):
             batch_chunks = chunks[start : start + batch_size]
@@ -182,7 +199,14 @@ class VectorStore:
                 )
                 indexed += len(points)
 
-        return {"indexed": indexed, "vector_size": self.vector_size}
+        indexing_duration = time.perf_counter() - indexing_start
+        total_duration = time.perf_counter() - start_total
+        timings = TimingBreakdown(
+            embedding_duration=max(0.0, embedding_duration),
+            indexing_duration=max(0.0, indexing_duration),
+            total_duration=max(0.0, total_duration),
+        ).to_dict()
+        return {"indexed": indexed, "vector_size": self.vector_size, "timings": timings}
 
     def search(
         self,

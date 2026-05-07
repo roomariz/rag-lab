@@ -6,6 +6,8 @@ import plotly.graph_objects as go
 from sklearn.manifold import TSNE
 from sklearn.metrics.pairwise import cosine_similarity
 
+from ..benchmarks.timing import TIMING_FIELDS
+
 
 def plot_tsne_embeddings(
     embeddings: np.ndarray,
@@ -233,6 +235,51 @@ def create_benchmark_analytics_charts(results: pd.DataFrame) -> dict:
             x="model",
             y="mean_latency",
             title="Embedding Latency by Model",
+        )
+
+    model_metric_columns = [
+        column
+        for column in [
+            "document_embedding_latency",
+            "query_embedding_latency",
+            "mean_latency",
+            "mean_recall_at_k",
+            "mean_faithfulness",
+            "mean_retrieval_latency",
+            "mean_hit_rate",
+            "mean_precision_at_k",
+            "mean_mrr",
+        ]
+        if column in results.columns
+    ]
+    if "model" in results.columns and len(model_metric_columns) > 1:
+        charts["model_quality"] = px.bar(
+            results,
+            x="model",
+            y=model_metric_columns,
+            title="Embedding Model Comparison",
+            barmode="group",
+        )
+
+    timing_columns = [column for column in TIMING_FIELDS if column in results.columns]
+    if timing_columns:
+        timing_frame = results.copy()
+        if "model" in timing_frame.columns:
+            x_col = "model"
+        elif "top_k" in timing_frame.columns:
+            x_col = "top_k"
+        elif "chunking_strategy" in timing_frame.columns:
+            x_col = "chunking_strategy"
+        else:
+            timing_frame = timing_frame.reset_index().rename(columns={"index": "sample"})
+            x_col = "sample"
+
+        charts["timing_breakdown"] = px.bar(
+            timing_frame,
+            x=x_col,
+            y=timing_columns,
+            title="Timing Breakdown",
+            barmode="group",
         )
 
     if "faithfulness" in results.columns:
