@@ -98,7 +98,6 @@
 - [x] Add controls for corpus ingestion, chunk strategy, top-k, and embedding model.
 - [x] Show retrieved chunks, generated answer, metrics, and latency from the same run.
 - [x] Add saved-run browsing instead of only one-off demos.
-- [ ] Optional tests: Streamlit smoke test or simple import-level test if the repo has that pattern.
 
 ### Target files
 - [src/dashboard/app.py](/mnt/d/workspace/open-source/ragas/src/dashboard/app.py)
@@ -109,6 +108,7 @@
 - [src/dashboard/state.py](/mnt/d/workspace/open-source/ragas/src/dashboard/state.py)
 
 ## 8. Visual analytics
+- [ ] Optional tests: Streamlit smoke test or simple import-level test if the repo has that pattern.
 - [ ] Add t-SNE cluster views fed by persisted embeddings.
 - [ ] Add retrieval neighborhood inspection for individual queries.
 - [ ] Add trend charts for metrics and latency over time.
